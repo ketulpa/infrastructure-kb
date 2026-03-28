@@ -39,5 +39,5 @@ This guide outlines the installation of the ISPmanager hosting control panel on 
 ---
 
 ## 📝 Full Detailed Guide
-👉 [Install ISPmanager on Debian (Complete Guide)] (https://ketulsysadmin.wordpress.com/how-to-install-ispmanager-hosting-control-panel-on-debian-os/)
+👉 [Install ISPmanager on Debian (Complete Guide)](https://ketulsysadmin.wordpress.com/how-to-install-ispmanager-hosting-control-panel-on-debian-os/)
 ---
