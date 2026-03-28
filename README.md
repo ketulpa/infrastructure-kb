@@ -1,8 +1,12 @@
 # 📚 Infrastructure Knowledge Base
 
-This repository contains practical guides and configurations related to system administration and infrastructure management.
+🌐 Live Documentation: https://ketulpa.github.io/infrastructure-kb/
+
+This repository contains structured guides and configurations related to Linux system administration, server management, and cloud infrastructure.
 
 ---
+
+## 📂 Topics
 
 ## 🖥️ Control Panel Installation
 
@@ -28,3 +32,8 @@ This repository contains practical guides and configurations related to system a
 ## 🎯 Purpose
 
 This repository serves as a structured knowledge base of real-world system administration tasks and configurations.
+
+---
+
+## 📌 Note
+This knowledge base is continuously updated with practical scenarios and configurations.
