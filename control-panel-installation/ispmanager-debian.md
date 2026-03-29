@@ -1,3 +1,4 @@
+{% include analytics.html %}
 # Install ISPmanager on Debian
 
 ## 📌 Overview
