@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ page.title }} | Infrastructure KB</title>
+
+  <!-- Google Analytics -->
+  {% include analytics.html %}
+
+  <style>
+    body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f5f5f5; color:#333;}
+    header { background:#0e75b6; color:white; padding:2rem; text-align:center;}
+    header h1 { margin:0;}
+    section { max-width:900px; margin:2rem auto; padding:2rem; background:white; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1);}
+    h2 { color:#0e75b6; margin-top:2rem;}
+    a.button { display:inline-block; margin:0.5rem 0.5rem 0 0; padding:0.5rem 1rem; background:#0e75b6; color:white; text-decoration:none; border-radius:5px; transition:0.2s;}
+    a.button:hover { background:#095494;}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Infrastructure Knowledge Base</h1>
+</header>
+
+<section>
+  {{ content }}
+</section>
+
+</body>
+</html>
