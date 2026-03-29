@@ -6,6 +6,9 @@ This documentation contains structured guides and configurations related to Linu
 
 ## 📂 Topics
 
+## 🐧 Linux Basics & Commands
+- 🔹 [Linux Commands & Options](./linux/linux-basics.md)
+
 ## 🖥️ Control Panel Installation
 
 - 🔧 [Install ISPmanager on Ubuntu](./control-panel-installation/ispmanager-ubuntu.md)
