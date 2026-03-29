@@ -1,4 +1,3 @@
-{% include analytics.html %}
 # Configure Web Server, Database Server, and FTP Server in ISPmanager
 
 ## 📌 Overview
@@ -21,7 +20,9 @@ This guide covers the configuration of essential hosting components including we
 - Configure directory access
 
 ---
-
+---
+layout: default
+---
 ## 🔐 Security Considerations
 - User access control
 - Service configuration
