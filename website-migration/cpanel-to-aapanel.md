@@ -1,4 +1,6 @@
-{% include analytics.html %}
+---
+layout: default
+---
 # Migrate Website from cPanel to aaPanel
 
 ## 📌 Overview
