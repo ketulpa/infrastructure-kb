@@ -1,3 +1,4 @@
+{% include analytics.html %}
 # 📚 Infrastructure Knowledge Base
 
 This documentation contains structured guides and configurations related to Linux system administration, server management, and cloud infrastructure.
