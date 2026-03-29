@@ -1,4 +1,6 @@
-{% include analytics.html %}
+---
+layout: default
+---
 # Install ISPmanager on AlmaLinux
 
 ## 📌 Overview
