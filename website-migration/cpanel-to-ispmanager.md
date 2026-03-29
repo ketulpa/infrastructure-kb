@@ -1,3 +1,4 @@
+{% include analytics.html %}
 # Migrate Website from cPanel to ISPmanager
 
 ## 📌 Overview
