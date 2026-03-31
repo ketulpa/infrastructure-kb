@@ -1,6 +1,5 @@
 ---
 layout: default
-title: "Linux User & Permission Management"
 ---
 
 # 🔐 Linux User & Permission Management
