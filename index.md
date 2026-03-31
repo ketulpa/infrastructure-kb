@@ -9,6 +9,7 @@ This documentation contains structured guides and configurations related to Linu
 
 ## 🐧 Linux Basics & Commands
 - 🔹 [Linux Commands & Options](./linux/linux-basics.md)
+- 🔐 [User & Permission Management](./linux/user-permissions.md)
 
 ## 🖥️ Control Panel Installation
 
