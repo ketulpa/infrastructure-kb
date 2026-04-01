@@ -14,6 +14,7 @@ This repository contains structured guides and configurations related to Linux s
 ## 🐧 Linux Basics & Commands
 - 🔹 [Linux Commands & Options](./linux/linux-basics.md)
 - 🔐 [User & Permission Management](./linux/user-permissions.md)
+- 📊 [Process Management](./linux/process-management.html)
 
 ## 🖥️ Control Panel Installation
 
