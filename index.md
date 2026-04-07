@@ -33,6 +33,13 @@ This documentation contains structured guides and configurations related to Linu
 
 ---
 
+## 🚀 DevOps Projects
+
+* 📖 [CI/CD Pipeline — Full Tutorial](https://ketulpa.github.io/infrastructure-kb/devops-project/devops-tutorial.html)
+* 📋 [Project Overview](https://ketulpa.github.io/infrastructure-kb/devops-project/overview.html)
+
+---
+
 ## 🎯 Purpose
 
 This documentation serves as a structured knowledge base of real-world system administration tasks and configurations.
