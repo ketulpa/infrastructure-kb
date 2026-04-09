@@ -1,6 +1,4 @@
----
-layout: default
----
+
 # 📚 Infrastructure Knowledge Base
 
 🌐 Live Documentation: https://ketulpa.github.io/infrastructure-kb/
