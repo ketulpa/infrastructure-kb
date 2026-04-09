@@ -20,44 +20,17 @@ gtag('config', 'G-FTC32Q1G9P');
 crossorigin="anonymous"></script>
 
 <style>
+
 /* Base */
 body {
   margin:0;
   font-family: Arial, sans-serif;
   background:#f5f5f5;
   color:#333;
-  display:flex;
-}
-
-/* Sidebar */
-.sidebar {
-  width:250px;
-  background:#0e75b6;
-  color:white;
-  height:100vh;
-  position:fixed;
-  padding:20px;
-  overflow:auto;
-}
-
-.sidebar h2 {
-  margin-top:0;
-}
-
-.sidebar a {
-  display:block;
-  color:white;
-  text-decoration:none;
-  margin:8px 0;
-}
-
-.sidebar a:hover {
-  text-decoration:underline;
 }
 
 /* Main Content */
 .main {
-  margin-left:250px;
   width:100%;
 }
 
@@ -67,6 +40,10 @@ header {
   color:white;
   padding:1.5rem;
   text-align:center;
+}
+
+header h1 {
+  color: white;
 }
 
 /* Content box */
@@ -84,10 +61,6 @@ h1, h2, h3 {
   color:#0e75b6;
 }
 
-  /* Fix header title */
-  header h1 {
-  color: white;
-}
 /* Tables */
 table {
   width:100%;
@@ -131,7 +104,7 @@ a:hover {
 /* Buttons */
 a.button {
   display:inline-block;
-  margin:0.5rem 0.5rem 0 0;
+  margin-bottom:1rem;
   padding:0.5rem 1rem;
   background:#0e75b6;
   color:white;
@@ -142,25 +115,9 @@ a.button:hover {
   background:#095494;
 }
 
-  /* 📱 Mobile Responsive Fix */
+/* 📱 Mobile Responsive */
 @media (max-width: 768px) {
 
-  /* Stack layout instead of side-by-side */
-  body {
-    display:block;
-  }
-
-  /* Hide sidebar on mobile */
-  .sidebar {
-    display:none;
-  }
-
-  /* Remove left margin */
-  .main {
-    margin-left:0;
-  }
-
-  /* Header */
   header {
     padding:1rem;
   }
@@ -169,13 +126,11 @@ a.button:hover {
     font-size:20px;
   }
 
-  /* Content spacing */
   section {
     margin:1rem;
     padding:1rem;
   }
 
-  /* Tables scroll horizontally */
   table {
     display:block;
     overflow-x:auto;
@@ -183,36 +138,13 @@ a.button:hover {
   }
 
 }
-  
+
 </style>
 
 </head>
 
 <body>
 
-<!-- Sidebar -->
-<div class="sidebar">
-  <h2>📚 Infra KB</h2>
-
-  <b>Linux</b>
-  <a href="/infrastructure-kb/linux/linux-basics.html">Linux Basics</a>
-  <a href="/infrastructure-kb/linux/user-permissions.html">User Permissions</a>
-  <a href="/infrastructure-kb/linux/process-management.html">Process Management</a>
-
-  <b>Control Panel</b>
-  <a href="/infrastructure-kb/control-panel-installation/ispmanager-ubuntu.html">ISPmanager Ubuntu</a>
-  <a href="/infrastructure-kb/control-panel-installation/ispmanager-debian.html">ISPmanager Debian</a>
-  <a href="/infrastructure-kb/control-panel-installation/ispmanager-almalinux.html">ISPmanager AlmaLinux</a>
-
-  <b>Migration</b>
-  <a href="/infrastructure-kb/website-migration/cpanel-to-aapanel.html">cPanel → aaPanel</a>
-  <a href="/infrastructure-kb/website-migration/cpanel-to-ispmanager.html">cPanel → ISPmanager</a>
-
-  <b>Components</b>
-  <a href="/infrastructure-kb/components/ispmanager-services.html">ISPmanager Services</a>
-</div>
-
-<!-- Main Area -->
 <div class="main">
 
 <header>
@@ -220,7 +152,13 @@ a.button:hover {
 </header>
 
 <section>
-  {{ content }}
+
+{% unless page.url == "/infrastructure-kb/" %}
+  <a href="/infrastructure-kb/" class="button">⬅ Back to Infrastructure KB</a>
+{% endunless %}
+
+{{ content }}
+
 </section>
 
 </div>
