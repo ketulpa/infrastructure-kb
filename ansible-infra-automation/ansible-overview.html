@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ansible Infra Automation — Ketul Patel</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0c0f;
+    --surface: #111418;
+    --surface2: #181c22;
+    --border: #1e2530;
+    --green: #00e676;
+    --green-dim: #00c85360;
+    --cyan: #00bcd4;
+    --orange: #ff6d00;
+    --text: #c9d1d9;
+    --text-dim: #586069;
+    --text-bright: #e6edf3;
+    --yellow: #ffd600;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* GRID BACKGROUND */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: 
+      linear-gradient(rgba(0,230,118,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,230,118,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10,12,15,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+  }
+
+  .nav-brand {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--green);
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--green); }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    z-index: 1;
+    min-height: 88vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 4rem 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .hero-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--green);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .hero-tag::before {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: var(--green);
+  }
+
+  .hero h1 {
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 800;
+    color: var(--text-bright);
+    line-height: 1.05;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.02em;
+  }
+
+  .hero h1 span {
+    color: var(--green);
+    position: relative;
+  }
+
+  .hero-desc {
+    font-size: 1.15rem;
+    color: var(--text);
+    max-width: 620px;
+    margin-bottom: 3rem;
+    line-height: 1.8;
+  }
+
+  .hero-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 3rem;
+  }
+
+  .badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    padding: 0.3rem 0.75rem;
+    border-radius: 2px;
+    border: 1px solid;
+    letter-spacing: 0.05em;
+  }
+
+  .badge-green { color: var(--green); border-color: var(--green-dim); background: rgba(0,230,118,0.06); }
+  .badge-cyan { color: var(--cyan); border-color: rgba(0,188,212,0.3); background: rgba(0,188,212,0.06); }
+  .badge-orange { color: var(--orange); border-color: rgba(255,109,0,0.3); background: rgba(255,109,0,0.06); }
+  .badge-yellow { color: var(--yellow); border-color: rgba(255,214,0,0.3); background: rgba(255,214,0,0.06); }
+
+  .hero-cta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--green);
+    color: #000;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 0.75rem 1.5rem;
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    transition: all 0.2s;
+  }
+
+  .btn-primary:hover { background: #00ff88; transform: translateY(-1px); }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    padding: 0.75rem 1.5rem;
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    transition: all 0.2s;
+  }
+
+  .btn-secondary:hover { border-color: var(--green); color: var(--green); }
+
+  /* STATS BAR */
+  .stats-bar {
+    position: relative;
+    z-index: 1;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 2rem;
+  }
+
+  .stats-grid {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--green);
+    display: block;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 0.25rem;
+  }
+
+  /* SECTIONS */
+  section {
+    position: relative;
+    z-index: 1;
+    padding: 5rem 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--green);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .section-label::before {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 1px;
+    background: var(--green);
+  }
+
+  .section-title {
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    font-weight: 800;
+    color: var(--text-bright);
+    margin-bottom: 3rem;
+    letter-spacing: -0.02em;
+  }
+
+  /* ARCHITECTURE */
+  .arch-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .arch-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 1.75rem;
+    position: relative;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .arch-card:hover {
+    border-color: var(--green);
+    transform: translateY(-2px);
+  }
+
+  .arch-card::before {
+    content: attr(data-num);
+    position: absolute;
+    top: 1.25rem;
+    right: 1.25rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--text-dim);
+  }
+
+  .arch-icon {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .arch-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-bright);
+    margin-bottom: 0.5rem;
+  }
+
+  .arch-desc {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    line-height: 1.7;
+  }
+
+  /* PHASES */
+  .phases {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .phase {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 0;
+    position: relative;
+  }
+
+  .phase-num {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 0.25rem;
+  }
+
+  .phase-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid var(--green);
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--green);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .phase-line {
+    flex: 1;
+    width: 1px;
+    background: var(--border);
+    margin: 4px 0;
+  }
+
+  .phase:last-child .phase-line { display: none; }
+
+  .phase-content {
+    padding: 0 0 3rem 1.5rem;
+  }
+
+  .phase-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--green);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.35rem;
+  }
+
+  .phase-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-bright);
+    margin-bottom: 0.5rem;
+  }
+
+  .phase-desc {
+    font-size: 0.875rem;
+    color: var(--text-dim);
+    line-height: 1.75;
+  }
+
+  .phase-items {
+    margin-top: 0.75rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .phase-item {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--cyan);
+    background: rgba(0,188,212,0.08);
+    border: 1px solid rgba(0,188,212,0.2);
+    padding: 0.2rem 0.6rem;
+    border-radius: 2px;
+  }
+
+  /* SCREENSHOTS */
+  .screenshots-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .screenshot-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .screenshot-card:hover {
+    border-color: var(--green);
+    transform: translateY(-2px);
+  }
+
+  .screenshot-card.wide {
+    grid-column: 1 / -1;
+  }
+
+  .screenshot-bar {
+    background: var(--surface2);
+    padding: 0.6rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-red { background: #ff5f57; }
+  .dot-yellow { background: #febc2e; }
+  .dot-green { background: #28c840; }
+
+  .screenshot-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--text-dim);
+    margin-left: 0.5rem;
+  }
+
+  .screenshot-img {
+    width: 100%;
+    display: block;
+    object-fit: cover;
+  }
+
+  .screenshot-caption {
+    padding: 0.75rem 1rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--text-dim);
+  }
+
+  /* INFRA TABLE */
+  .infra-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+  }
+
+  .infra-table th {
+    text-align: left;
+    padding: 0.75rem 1rem;
+    color: var(--text-dim);
+    font-weight: 400;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .infra-table td {
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+  }
+
+  .infra-table tr:hover td { background: var(--surface2); }
+
+  .status-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    margin-right: 0.5rem;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* TERMINAL BLOCK */
+  .terminal {
+    background: #0d1117;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 1.5rem 0;
+  }
+
+  .terminal-bar {
+    background: var(--surface2);
+    padding: 0.6rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .terminal-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--text-dim);
+    margin-left: auto;
+  }
+
+  .terminal-body {
+    padding: 1.25rem 1.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    line-height: 1.8;
+    overflow-x: auto;
+  }
+
+  .t-prompt { color: var(--green); }
+  .t-cmd { color: var(--text-bright); }
+  .t-ok { color: var(--green); }
+  .t-changed { color: var(--yellow); }
+  .t-comment { color: var(--text-dim); }
+
+  /* FOOTER */
+  footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--border);
+    padding: 3rem 2rem;
+    text-align: center;
+  }
+
+  .footer-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .footer-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-bright);
+    margin-bottom: 0.5rem;
+  }
+
+  .footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .footer-links a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--green); }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 5rem auto 0;
+    max-width: 1100px;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-tag { animation: fadeUp 0.5s ease both; }
+  .hero h1 { animation: fadeUp 0.5s 0.1s ease both; }
+  .hero-desc { animation: fadeUp 0.5s 0.2s ease both; }
+  .hero-badges { animation: fadeUp 0.5s 0.3s ease both; }
+  .hero-cta { animation: fadeUp 0.5s 0.4s ease both; }
+
+  @media (max-width: 768px) {
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .phase { grid-template-columns: 60px 1fr; }
+    .screenshot-card.wide { grid-column: auto; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="https://ketulpa.github.io" class="nav-brand">~/ketul-patel</a>
+  <ul class="nav-links">
+    <li><a href="https://ketulpa.github.io">Portfolio</a></li>
+    <li><a href="https://github.com/ketulpa/ansible-infra-automation">GitHub</a></li>
+    <li><a href="https://linkedin.com/in/ketulrpatel">LinkedIn</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">Project 02 — Infrastructure Automation</div>
+  <h1>Ansible <span>Infra</span><br>Automation</h1>
+  <p class="hero-desc">
+    Cross-platform infrastructure automation across Ubuntu 24.04 LTS and Windows Server 2025 — 
+    hardening, user management, secrets encryption, and CI/CD via GitHub Actions. 
+    One command configures everything.
+  </p>
+  <div class="hero-badges">
+    <span class="badge badge-green">Ansible 2.16</span>
+    <span class="badge badge-green">Ansible Vault</span>
+    <span class="badge badge-cyan">GitHub Actions</span>
+    <span class="badge badge-cyan">Ubuntu 24.04</span>
+    <span class="badge badge-orange">Windows Server 2025</span>
+    <span class="badge badge-orange">WinRM</span>
+    <span class="badge badge-yellow">Chocolatey</span>
+    <span class="badge badge-yellow">UFW · fail2ban</span>
+  </div>
+  <div class="hero-cta">
+    <a href="https://github.com/ketulpa/ansible-infra-automation" class="btn-primary">↗ View on GitHub</a>
+    <a href="#screenshots" class="btn-secondary">View Screenshots →</a>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stats-grid">
+    <div class="stat">
+      <span class="stat-num">2</span>
+      <div class="stat-label">Servers Automated</div>
+    </div>
+    <div class="stat">
+      <span class="stat-num">3</span>
+      <div class="stat-label">Playbooks</div>
+    </div>
+    <div class="stat">
+      <span class="stat-num">19</span>
+      <div class="stat-label">Ansible Tasks</div>
+    </div>
+    <div class="stat">
+      <span class="stat-num">0</span>
+      <div class="stat-label">Failures · failed=0</div>
+    </div>
+  </div>
+</div>
+
+<!-- ARCHITECTURE -->
+<section>
+  <div class="section-label">What it does</div>
+  <h2 class="section-title">Architecture Overview</h2>
+  <div class="arch-grid">
+    <div class="arch-card" data-num="01">
+      <div class="arch-icon">🐧</div>
+      <div class="arch-title">Linux Server Hardening</div>
+      <p class="arch-desc">UFW firewall rules, fail2ban intrusion prevention, SSH key-only auth, system package upgrades, and common tooling installation on Ubuntu 24.04 LTS.</p>
+    </div>
+    <div class="arch-card" data-num="02">
+      <div class="arch-icon">🪟</div>
+      <div class="arch-title">Windows Server Setup</div>
+      <p class="arch-desc">WinRM-based remote automation of Windows Server 2025 — user creation, firewall rules, IIS feature install, timezone config, and Chocolatey package management.</p>
+    </div>
+    <div class="arch-card" data-num="03">
+      <div class="arch-icon">👥</div>
+      <div class="arch-title">User Deployment</div>
+      <p class="arch-desc">Automated devops user and group creation with sudoers configuration on Linux — mirrors real-world onboarding automation used by infra teams.</p>
+    </div>
+    <div class="arch-card" data-num="04">
+      <div class="arch-icon">🔐</div>
+      <div class="arch-title">Ansible Vault</div>
+      <p class="arch-desc">Sensitive credentials encrypted with AES-256 Ansible Vault. Secrets never stored in plaintext — vault file committed safely to version control.</p>
+    </div>
+    <div class="arch-card" data-num="05">
+      <div class="arch-icon">⚙️</div>
+      <div class="arch-title">Ansible Roles</div>
+      <p class="arch-desc">Enterprise-grade role structure using ansible-galaxy — linux_base and windows_base roles for reusable, modular configuration management.</p>
+    </div>
+    <div class="arch-card" data-num="06">
+      <div class="arch-icon">✅</div>
+      <div class="arch-title">GitHub Actions CI</div>
+      <p class="arch-desc">ansible-lint runs automatically on every push — enforcing FQCN standards, YAML formatting, and playbook syntax before any code reaches production.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- PHASES -->
+<section>
+  <div class="section-label">How it was built</div>
+  <h2 class="section-title">Project Phases</h2>
+  <div class="phases">
+
+    <div class="phase">
+      <div class="phase-num">
+        <div class="phase-circle">1</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-content">
+        <div class="phase-tag">Phase 1</div>
+        <div class="phase-title">Ansible Setup + Cross-Platform Inventory</div>
+        <p class="phase-desc">Installed Ansible 2.16 on Linux VPS. Created inventory file targeting both Ubuntu 24.04 (SSH) and Windows Server 2025 (WinRM/NTLM). Verified connectivity with ping and win_ping modules — both returned SUCCESS.</p>
+        <div class="phase-items">
+          <span class="phase-item">ansible-lint</span>
+          <span class="phase-item">python3-winrm</span>
+          <span class="phase-item">hosts.ini</span>
+          <span class="phase-item">win_ping</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-num">
+        <div class="phase-circle">2</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-content">
+        <div class="phase-tag">Phase 2</div>
+        <div class="phase-title">Linux Hardening Playbook</div>
+        <p class="phase-desc">Automated UFW firewall configuration (8 ports), fail2ban setup, SSH password auth disabling, package upgrades, timezone configuration, and common tool installation. All 8 tasks completed with zero failures.</p>
+        <div class="phase-items">
+          <span class="phase-item">UFW firewall</span>
+          <span class="phase-item">fail2ban</span>
+          <span class="phase-item">SSH hardening</span>
+          <span class="phase-item">apt upgrade</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-num">
+        <div class="phase-circle">3</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-content">
+        <div class="phase-tag">Phase 3</div>
+        <div class="phase-title">Windows Server Automation</div>
+        <p class="phase-desc">Configured Windows Server 2025 via WinRM — installed IIS and Telnet features, set timezone to UTC, created admin user, configured RDP firewall rule, and installed notepad++, 7zip, and git via Chocolatey.</p>
+        <div class="phase-items">
+          <span class="phase-item">WinRM</span>
+          <span class="phase-item">win_feature</span>
+          <span class="phase-item">Chocolatey</span>
+          <span class="phase-item">win_user</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-num">
+        <div class="phase-circle">4</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-content">
+        <div class="phase-tag">Phase 4</div>
+        <div class="phase-title">Ansible Vault Secrets Management</div>
+        <p class="phase-desc">Encrypted sensitive credentials (Windows user password) using AES-256 Ansible Vault. Vault file committed to git safely — only decrypted at runtime with --ask-vault-pass. Demonstrates security-first infrastructure practices.</p>
+        <div class="phase-items">
+          <span class="phase-item">AES-256</span>
+          <span class="phase-item">ansible-vault</span>
+          <span class="phase-item">vars_files</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-num">
+        <div class="phase-circle">5</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-content">
+        <div class="phase-tag">Phase 5</div>
+        <div class="phase-title">Roles + Master Playbook</div>
+        <p class="phase-desc">Structured project into ansible-galaxy roles (linux_base, windows_base) and a master site.yml that orchestrates all three playbooks in sequence — hardening Linux, configuring Windows, and deploying users — in a single command.</p>
+        <div class="phase-items">
+          <span class="phase-item">ansible-galaxy</span>
+          <span class="phase-item">site.yml</span>
+          <span class="phase-item">linux_base role</span>
+          <span class="phase-item">windows_base role</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-num">
+        <div class="phase-circle">6</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-content">
+        <div class="phase-tag">Phase 6</div>
+        <div class="phase-title">GitHub Actions CI Pipeline</div>
+        <p class="phase-desc">Automated ansible-lint runs on every push via GitHub Actions — enforcing FQCN module naming, YAML truthy value standards, and playbook syntax. CI passes cleanly with Status: Success on every commit.</p>
+        <div class="phase-items">
+          <span class="phase-item">ansible-lint</span>
+          <span class="phase-item">FQCN enforcement</span>
+          <span class="phase-item">ubuntu-latest runner</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- INFRASTRUCTURE -->
+<section>
+  <div class="section-label">Infrastructure</div>
+  <h2 class="section-title">Target Servers</h2>
+  <table class="infra-table">
+    <thead>
+      <tr>
+        <th>Host</th>
+        <th>OS</th>
+        <th>IP</th>
+        <th>Connection</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>linux_vps</td>
+        <td>Ubuntu 24.04 LTS</td>
+        <td>151.247.172.15</td>
+        <td>SSH / Port 22</td>
+        <td><span class="status-dot"></span>ping: pong</td>
+      </tr>
+      <tr>
+        <td>windows_vps</td>
+        <td>Windows Server 2025</td>
+        <td>173.248.136.194</td>
+        <td>WinRM / NTLM / Port 5985</td>
+        <td><span class="status-dot"></span>win_ping: pong</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="terminal" style="margin-top: 2rem;">
+    <div class="terminal-bar">
+      <div class="dot dot-red"></div>
+      <div class="dot dot-yellow"></div>
+      <div class="dot dot-green"></div>
+      <span class="terminal-title">site.yml — master playbook execution</span>
+    </div>
+    <div class="terminal-body">
+      <div><span class="t-prompt">$</span> <span class="t-cmd">ansible-playbook -i inventory/hosts.ini playbooks/site.yml --ask-vault-pass</span></div>
+      <div><span class="t-comment">PLAY [Linux Server Hardening] ****************************</span></div>
+      <div><span class="t-ok">ok: [localhost]</span> <span class="t-comment">— 8 tasks, 0 failures</span></div>
+      <div><span class="t-comment">PLAY [Windows Server Base Configuration] *****************</span></div>
+      <div><span class="t-ok">ok: [windows_vps]</span> <span class="t-comment">— 7 tasks, 0 failures</span></div>
+      <div><span class="t-comment">PLAY [Deploy Users on Linux] *****************************</span></div>
+      <div><span class="t-changed">changed: [localhost]</span> <span class="t-comment">— group, user, sudoers created</span></div>
+      <br>
+      <div><span class="t-comment">PLAY RECAP ***********************************************</span></div>
+      <div><span class="t-ok">localhost</span>     : <span class="t-ok">ok=12</span>   <span class="t-changed">changed=3</span>   unreachable=0   <span class="t-ok">failed=0</span></div>
+      <div><span class="t-ok">windows_vps</span>   : <span class="t-ok">ok=7</span>    changed=0   unreachable=0   <span class="t-ok">failed=0</span></div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- SCREENSHOTS -->
+<section id="screenshots">
+  <div class="section-label">Evidence</div>
+  <h2 class="section-title">Project Screenshots</h2>
+  <div class="screenshots-grid">
+
+    <div class="screenshot-card">
+      <div class="screenshot-bar">
+        <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        <span class="screenshot-title">ansible --version</span>
+      </div>
+      <img src="assets/images/ansible/01.png" alt="Ansible version output" class="screenshot-img">
+      <div class="screenshot-caption">// 01 — Ansible 2.16.3 installed on Ubuntu 24.04 LTS</div>
+    </div>
+
+    <div class="screenshot-card">
+      <div class="screenshot-bar">
+        <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        <span class="screenshot-title">ping + win_ping</span>
+      </div>
+      <img src="assets/images/ansible/02.png" alt="Cross-platform connectivity test" class="screenshot-img">
+      <div class="screenshot-caption">// 02 — Both Linux and Windows respond SUCCESS</div>
+    </div>
+
+    <div class="screenshot-card wide">
+      <div class="screenshot-bar">
+        <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        <span class="screenshot-title">linux-hardening.yml</span>
+      </div>
+      <img src="assets/images/ansible/03.png" alt="Linux hardening playbook run" class="screenshot-img">
+      <div class="screenshot-caption">// 03 — Linux hardening playbook: ok=8 changed=0 failed=0</div>
+    </div>
+
+    <div class="screenshot-card">
+      <div class="screenshot-bar">
+        <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        <span class="screenshot-title">ufw status</span>
+      </div>
+      <img src="assets/images/ansible/ufs_status.png" alt="UFW firewall status" class="screenshot-img">
+      <div class="screenshot-caption">// 04 — UFW active with all required ports allowed</div>
+    </div>
+
+    <div class="screenshot-card">
+      <div class="screenshot-bar">
+        <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        <span class="screenshot-title">windows-setup.yml</span>
+      </div>
+      <img src="assets/images/ansible/04.png" alt="Windows playbook run" class="screenshot-img">
+      <div class="screenshot-caption">// 05 — Windows playbook: ok=7 changed=4 failed=0</div>
+    </div>
+
+    <div class="screenshot-card">
+      <div class="screenshot-bar">
+        <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        <span class="screenshot-title">vault/secrets.yml</span>
+      </div>
+      <img src="assets/images/ansible/vault.png" alt="Ansible Vault encrypted file" class="screenshot-img">
+      <div class="screenshot-caption">// 07 — AES-256 encrypted vault — secrets never in plaintext</div>
+    </div>
+
+    <div class="screenshot-card wide">
+      <div class="screenshot-bar">
+        <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        <span class="screenshot-title">site.yml — master playbook</span>
+      </div>
+      <img src="assets/images/ansible/05_3.png" alt="Master playbook PLAY RECAP" class="screenshot-img">
+      <div class="screenshot-caption">// 08 — Master run: localhost ok=12 + windows_vps ok=7 — both servers automated in one command</div>
+    </div>
+
+    <div class="screenshot-card">
+      <div class="screenshot-bar">
+        <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        <span class="screenshot-title">ansible-galaxy init</span>
+      </div>
+      <img src="assets/images/ansible/05.png" alt="Ansible roles created" class="screenshot-img">
+      <div class="screenshot-caption">// 06 — Enterprise role structure: linux_base + windows_base</div>
+    </div>
+
+    <div class="screenshot-card">
+      <div class="screenshot-bar">
+        <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        <span class="screenshot-title">GitHub repo structure</span>
+      </div>
+      <img src="assets/images/ansible/folder.png" alt="GitHub repo folders" class="screenshot-img">
+      <div class="screenshot-caption">// 10 — Clean repo structure: inventory, playbooks, roles, vault, CI</div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-name">Ketul Patel</div>
+    <div style="font-size:0.8rem; color:var(--text-dim); margin-top:0.25rem;">RHCSA Certified · Linux SysAdmin · DevOps</div>
+    <div class="footer-links">
+      <a href="https://ketulpa.github.io">Portfolio</a>
+      <a href="https://github.com/ketulpa">GitHub</a>
+      <a href="https://linkedin.com/in/ketulrpatel">LinkedIn</a>
+      <a href="mailto:ketulrapatel@gmail.com">ketulrapatel@gmail.com</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
