@@ -52,6 +52,7 @@ This repository serves as a structured knowledge base of real-world system admin
 **Project 2 — Ansible Infra Automation**
 * 🤖 [Ansible Infra Automation — Project Overview](https://ketulpa.github.io/infrastructure-kb/ansible-infra-automation/ansible-overview.html)
 * 🔗 [GitHub Repository](https://github.com/ketulpa/ansible-infra-automation)
+
 ---
 
 ## 📌 Note
