@@ -23,9 +23,6 @@ This guide covers the configuration of essential hosting components including we
 - Configure directory access
 
 ---
----
-layout: default
----
 ## 🔐 Security Considerations
 - User access control
 - Service configuration
