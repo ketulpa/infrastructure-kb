@@ -45,9 +45,13 @@ This repository serves as a structured knowledge base of real-world system admin
 
 ## 🚀 DevOps Projects
 
+**Project 1 — CI/CD Pipeline**
 * 📖 [CI/CD Pipeline — Full Tutorial](https://ketulpa.github.io/infrastructure-kb/devops-project/devops-tutorial.html)
-* 📋 [Project Overview](https://ketulpa.github.io/infrastructure-kb/devops-project/overview.html)
+* 📋 [GitHub Repository](https://github.com/ketulpa/devops-pipeline)
 
+**Project 2 — Ansible Infra Automation**
+* 🤖 [Ansible Infra Automation — Project Overview](https://ketulpa.github.io/infrastructure-kb/ansible-infra-automation/ansible-overview.html)
+* 🔗 [GitHub Repository](https://github.com/ketulpa/ansible-infra-automation)
 ---
 
 ## 📌 Note
